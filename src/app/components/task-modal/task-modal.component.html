@@ -1,0 +1,31 @@
+<app-modal name="Add task">
+  <form
+    [formGroup]="taskForm"
+    (ngSubmit)="handleSubmit()"
+    class="flex flex-col gap-2"
+  >
+    <label class="flex justify-between items-center gap-2">
+      <span class="font-semibold">Name: </span>
+      <input
+        formControlName="name"
+        class="border-2 rounded-md p-1 w-2/4 border-slate-300"
+        type="text"
+      />
+    </label>
+    <label class="flex justify-between items-center">
+      <span class="font-semibold">Description: </span>
+      <input
+        formControlName="description"
+        class="border-2 rounded-md p-1 w-2/4 border-slate-300"
+        type="text"
+      />
+    </label>
+    <button
+      class="p-2 border-2 rounded-md mb-2 text-white bg-blue-500 hover:bg-blue-600 hover:cursor-pointer"
+      type="submit"
+      [disabled]="!taskForm.valid"
+    >
+      @if(this._task){ Edit }@else{ Add }
+    </button>
+  </form>
+</app-modal>
