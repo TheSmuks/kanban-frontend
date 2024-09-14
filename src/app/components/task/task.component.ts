@@ -24,6 +24,6 @@ export class TaskComponent {
 
   emitEdit() {
     this.onTaskEdit.emit(this.properties);
-    this.kanbanService.setModalVisibility(ModalType.EditTask);
+    this.kanbanService.setModalVisibility(ModalType.Task);
   }
 }

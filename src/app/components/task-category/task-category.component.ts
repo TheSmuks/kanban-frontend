@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TaskCategory } from '../../interfaces/task-category';
 import { TaskComponent } from '../task/task.component';
 import { KanbanService } from '../../services/kanban.service';
@@ -26,6 +26,8 @@ export class TaskCategoryComponent {
     color: '',
     tasks: [],
   };
+  isContextMenuVisible: boolean = false;
+
   constructor(private kanbanService: KanbanService) {}
 
   addTask() {
@@ -36,11 +38,10 @@ export class TaskCategoryComponent {
   editTask(task: Task) {
     this.kanbanService.activeCategory = this.properties;
     this.kanbanService.activeTask = task;
-    this.kanbanService.setModalVisibility(ModalType.EditTask);
+    this.kanbanService.setModalVisibility(ModalType.Task);
   }
 
   drop(event: CdkDragDrop<Task[]>) {
-    console.log(event);
     if (event.previousContainer === event.container)
       moveItemInArray(
         this.properties.tasks,
@@ -65,5 +66,18 @@ export class TaskCategoryComponent {
   handleCategoryDeletion() {
     this.kanbanService.activeCategory = this.properties;
     this.kanbanService.removeCategory();
+    this.isContextMenuVisible = false;
+  }
+
+  handleCategoryClear() {
+    this.kanbanService.activeCategory = this.properties;
+    this.kanbanService.clearCategory();
+    this.isContextMenuVisible = false;
+  }
+
+  moveCategory(left: boolean) {
+    this.kanbanService.activeCategory = this.properties;
+    this.kanbanService.moveCategory(left);
+    this.isContextMenuVisible = false;
   }
 }

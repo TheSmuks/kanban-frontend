@@ -6,7 +6,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { TaskCategory } from '../../interfaces/task-category';
 import { KanbanService } from '../../services/kanban.service';
 import { ModalType } from '../../enums/modal-type';
 import { Task } from '../../interfaces/task';
@@ -36,8 +35,14 @@ export class TaskModalComponent {
   }
   handleSubmit() {
     if (this._task) {
-      this._task!.name = this.taskForm.value.name!;
-      this._task!.desc = this.taskForm.value.description!;
+      if (
+        this._task.name !== this.taskForm.value.name &&
+        this._task.desc !== this.taskForm.value.description
+      ) {
+        this._task.name = this.taskForm.value.name!;
+        this._task.desc = this.taskForm.value.description!;
+        this.kanbanService.editTask();
+      }
     } else {
       this.kanbanService.activeTask = {
         id: '-1',
