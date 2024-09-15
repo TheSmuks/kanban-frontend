@@ -29,10 +29,14 @@ export class AppComponent {
   categories: TaskCategory[] = [];
   activeModal: ModalType = ModalType.Disabled;
   isTaskModal: boolean = false;
+  isContextMenuActive: boolean = false;
   ModalType = ModalType;
   constructor(private kanbanService: KanbanService) {
     kanbanService.activeModal.subscribe((val) => (this.activeModal = val));
     kanbanService.categories.subscribe((val) => (this.categories = val));
+    kanbanService.contextMenuVisbility.subscribe(
+      (val) => (this.isContextMenuActive = val)
+    );
     this.categories.push({
       id: '1',
       name: 'Todo',
@@ -57,7 +61,12 @@ export class AppComponent {
   handleEsc() {
     this.kanbanService.setModalVisibility(ModalType.Disabled);
   }
-
+  @HostListener('window:click')
+  handleClick() {
+    if (this.isContextMenuActive) {
+      this.kanbanService.hideContextMenu();
+    }
+  }
   addCategory() {
     this.kanbanService.setModalVisibility(ModalType.Category);
     // this.categories.push({ id: '', name: 'test', color: 'FFFFFF', tasks: [] });

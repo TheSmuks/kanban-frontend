@@ -8,7 +8,9 @@
           <span class="font-semibold">Color: </span>
           <input formControlName="color" class="border-2 rounded-md p-1 w-2/4 border-slate-300" type="color"/>
       </label>
-      <button class="p-2 border-2 rounded-md mb-2 text-white bg-blue-500 hover:bg-blue-600 hover:cursor-pointer" type="submit" [disabled]="!categoryForm.valid">Add</button>
+      <button class="p-2 border-2 rounded-md mb-2 text-white bg-blue-500 hover:bg-blue-600 hover:cursor-pointer" type="submit" [disabled]="!categoryForm.valid">
+        @if(this._category){ Edit }@else{ Add }
+      </button>
     </form>
   </app-modal>
   

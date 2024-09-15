@@ -36,7 +36,7 @@ export class TaskModalComponent {
   handleSubmit() {
     if (this._task) {
       if (
-        this._task.name !== this.taskForm.value.name &&
+        this._task.name !== this.taskForm.value.name ||
         this._task.desc !== this.taskForm.value.description
       ) {
         this._task.name = this.taskForm.value.name!;

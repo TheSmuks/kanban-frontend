@@ -28,7 +28,11 @@ export class TaskCategoryComponent {
   };
   isContextMenuVisible: boolean = false;
 
-  constructor(private kanbanService: KanbanService) {}
+  constructor(private kanbanService: KanbanService) {
+    kanbanService.isContextMenuHidden.subscribe((val) => {
+      if (val) this.isContextMenuVisible = false;
+    });
+  }
 
   addTask() {
     this.kanbanService.activeCategory = this.properties;
@@ -63,21 +67,32 @@ export class TaskCategoryComponent {
     this.kanbanService.removeTask();
   }
 
+  updateContextMenuVisbility(val: boolean) {
+    this.kanbanService.updateContextMenuVisibility(val);
+    this.isContextMenuVisible = val;
+  }
+
+  handleCategoryEdit() {
+    this.kanbanService.activeCategory = this.properties;
+    this.kanbanService.setModalVisibility(ModalType.Category);
+    this.updateContextMenuVisbility(false);
+  }
+
   handleCategoryDeletion() {
     this.kanbanService.activeCategory = this.properties;
     this.kanbanService.removeCategory();
-    this.isContextMenuVisible = false;
+    this.updateContextMenuVisbility(false);
   }
 
   handleCategoryClear() {
     this.kanbanService.activeCategory = this.properties;
     this.kanbanService.clearCategory();
-    this.isContextMenuVisible = false;
+    this.updateContextMenuVisbility(false);
   }
 
   moveCategory(left: boolean) {
     this.kanbanService.activeCategory = this.properties;
     this.kanbanService.moveCategory(left);
-    this.isContextMenuVisible = false;
+    this.updateContextMenuVisbility(false);
   }
 }

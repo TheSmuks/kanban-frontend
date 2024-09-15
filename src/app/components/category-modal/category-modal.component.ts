@@ -18,22 +18,40 @@ import { TaskCategory } from '../../interfaces/task-category';
   styleUrl: './category-modal.component.css',
 })
 export class CategoryModalComponent {
-  private _category: TaskCategory = {
-    id: '-1',
-    name: '',
-    color: '',
-    tasks: [],
-  };
   categoryForm = new FormGroup({
     name: new FormControl('', Validators.required),
     color: new FormControl('', Validators.required),
   });
-  constructor(private kanbanService: KanbanService) {}
+  _category: TaskCategory | undefined;
+
+  constructor(private kanbanService: KanbanService) {
+    this._category = this.kanbanService.activeCategory;
+    if (this._category) {
+      this.categoryForm.setValue({
+        name: this._category.name,
+        color: this._category.color,
+      });
+    }
+  }
   handleSubmit() {
-    this._category.name = this.categoryForm.value.name!;
-    this._category.color = this.categoryForm.value.color!;
-    this.kanbanService.activeCategory = this._category;
-    this.kanbanService.addCategory();
+    if (this._category) {
+      if (
+        this._category.name !== this.categoryForm.value.name ||
+        this._category.color !== this.categoryForm.value.color
+      ) {
+        this._category.name = this.categoryForm.value.name!;
+        this._category.color = this.categoryForm.value.color!;
+        this.kanbanService.editCategory();
+      }
+    } else {
+      this.kanbanService.activeCategory = {
+        id: '-1',
+        name: this.categoryForm.value.name!,
+        color: this.categoryForm.value.color!,
+        tasks: [],
+      };
+      this.kanbanService.addCategory();
+    }
     this.kanbanService.setModalVisibility(ModalType.Disabled);
   }
 }
