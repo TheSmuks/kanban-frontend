@@ -29,7 +29,7 @@ export class TaskModalComponent {
     if (this._task) {
       this.taskForm.setValue({
         name: this._task.name,
-        description: this._task.desc,
+        description: this._task.description,
       });
     }
   }
@@ -37,17 +37,18 @@ export class TaskModalComponent {
     if (this._task) {
       if (
         this._task.name !== this.taskForm.value.name ||
-        this._task.desc !== this.taskForm.value.description
+        this._task.description !== this.taskForm.value.description
       ) {
         this._task.name = this.taskForm.value.name!;
-        this._task.desc = this.taskForm.value.description!;
+        this._task.description = this.taskForm.value.description!;
         this.kanbanService.editTask();
       }
     } else {
       this.kanbanService.activeTask = {
-        id: '-1',
+        id: -1,
         name: this.taskForm.value.name!,
-        desc: this.taskForm.value.description!,
+        description: this.taskForm.value.description!,
+        categoryId: -1,
       };
       this.kanbanService.addTask();
     }

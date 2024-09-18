@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TaskCategory } from '../../interfaces/task-category';
+import { Category as Category } from '../../interfaces/category';
 import { TaskComponent } from '../task/task.component';
 import { KanbanService } from '../../services/kanban.service';
 import {
@@ -16,12 +16,12 @@ import { ModalType } from '../../enums/modal-type';
   selector: 'app-task-category',
   standalone: true,
   imports: [TaskComponent, DragDropModule, CdkDropList],
-  templateUrl: './task-category.component.html',
-  styleUrl: './task-category.component.css',
+  templateUrl: './category.component.html',
+  styleUrl: './category.component.css',
 })
-export class TaskCategoryComponent {
-  @Input() properties: TaskCategory = {
-    id: '',
+export class CategoryComponent {
+  @Input() properties: Category = {
+    id: -1,
     name: '',
     color: '',
     tasks: [],
@@ -45,22 +45,24 @@ export class TaskCategoryComponent {
     this.kanbanService.setModalVisibility(ModalType.Task);
   }
 
-  drop(event: CdkDragDrop<Task[]>) {
-    if (event.previousContainer === event.container)
+  drop(event: CdkDragDrop<Category>) {
+    if (event.previousContainer === event.container) {
       moveItemInArray(
         this.properties.tasks,
         event.previousIndex,
         event.currentIndex
       );
-    else
+      // TODO: send update task with updated priority
+    } else {
       transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
+        event.previousContainer.data.tasks,
+        event.container.data.tasks,
         event.previousIndex,
         event.currentIndex
       );
+      // TODO: send update task with updated categoryId
+    }
   }
-
   handleTaskDeletion(task: Task) {
     this.kanbanService.activeCategory = this.properties;
     this.kanbanService.activeTask = task;
@@ -85,8 +87,9 @@ export class TaskCategoryComponent {
   }
 
   handleCategoryClear() {
+    this.properties.tasks = [];
     this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.clearCategory();
+    this.kanbanService.updateCategory();
     this.updateContextMenuVisbility(false);
   }
 

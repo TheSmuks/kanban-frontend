@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { KanbanService } from '../../services/kanban.service';
 import { ModalType } from '../../enums/modal-type';
-import { TaskCategory } from '../../interfaces/task-category';
+import { Category } from '../../interfaces/category';
 
 @Component({
   selector: 'app-category-modal',
@@ -22,7 +22,7 @@ export class CategoryModalComponent {
     name: new FormControl('', Validators.required),
     color: new FormControl('', Validators.required),
   });
-  _category: TaskCategory | undefined;
+  _category: Category | undefined;
 
   constructor(private kanbanService: KanbanService) {
     this._category = this.kanbanService.activeCategory;
@@ -41,11 +41,11 @@ export class CategoryModalComponent {
       ) {
         this._category.name = this.categoryForm.value.name!;
         this._category.color = this.categoryForm.value.color!;
-        this.kanbanService.editCategory();
+        this.kanbanService.updateCategory();
       }
     } else {
       this.kanbanService.activeCategory = {
-        id: '-1',
+        id: -1,
         name: this.categoryForm.value.name!,
         color: this.categoryForm.value.color!,
         tasks: [],

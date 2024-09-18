@@ -2,11 +2,15 @@
   class="flex flex-col border-2 border-l-4 rounded-md p-2 shadow-md hover:cursor-pointer bg-white"
   [style.border-color]="color"
   cdkDrag
+  [cdkDragData]="properties"
 >
   <span class="font-semibold">{{ properties.name }}</span>
-  <span>{{ properties.desc }}</span>
+  <span>{{ properties.description }}</span>
   <div class="flex items-center gap-2">
-    <button class="p-1 border-slate-300 border-2 rounded-md hover:text-blue-600 hover:border-blue-600" (click)="emitEdit()">
+    <button
+      class="p-1 border-slate-300 border-2 rounded-md hover:text-blue-600 hover:border-blue-600"
+      (click)="emitEdit()"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"
@@ -25,7 +29,10 @@
         <path d="m15 5 4 4" />
       </svg>
     </button>
-    <button class="p-1 border-slate-300 border-2 rounded-md hover:text-red-600  hover:border-red-600" (click)="emitDelete()">
+    <button
+      class="p-1 border-slate-300 border-2 rounded-md hover:text-red-600 hover:border-red-600"
+      (click)="emitDelete()"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="16"

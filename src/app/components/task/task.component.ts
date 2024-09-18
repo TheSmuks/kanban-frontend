@@ -12,7 +12,7 @@ import { ModalType } from '../../enums/modal-type';
   styleUrl: './task.component.css',
 })
 export class TaskComponent {
-  @Input() properties: Task = { id: '', name: '', desc: '' };
+  @Input() properties: Task = { id: -1, name: '', description: '', categoryId: -1 };
   @Input() color: string = '';
   @Output() onDelete: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() onTaskEdit: EventEmitter<Task> = new EventEmitter<Task>();

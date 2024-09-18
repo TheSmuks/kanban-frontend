@@ -72,7 +72,7 @@
     <div
       class="flex flex-col gap-2 min-h-[50vh]"
       cdkDropList
-      [cdkDropListData]="properties.tasks"
+      [cdkDropListData]="properties"
       (cdkDropListDropped)="drop($event)"
     >
       @for (task of properties.tasks; track task) {
