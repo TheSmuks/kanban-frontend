@@ -22,36 +22,44 @@ export class CategoryModalComponent {
     name: new FormControl('', Validators.required),
     color: new FormControl('', Validators.required),
   });
-  _category: Category | undefined;
-
-  constructor(private kanbanService: KanbanService) {
-    this._category = this.kanbanService.activeCategory;
-    if (this._category) {
+  @Input() category: Category = {
+    id: -1,
+    name: '',
+    color: '',
+    tasks: [],
+    position: -1,
+  };
+  private receivedInput: boolean = false;
+  constructor(private kanbanService: KanbanService) {}
+  ngOnChanges() {
+    if (!this.receivedInput && this.category.id !== -1) {
+      this.receivedInput = true;
       this.categoryForm.setValue({
-        name: this._category.name,
-        color: this._category.color,
+        name: this.category.name,
+        color: this.category.color,
       });
     }
   }
   handleSubmit() {
-    if (this._category) {
+    if (this.category.id !== -1) {
       if (
-        this._category.name !== this.categoryForm.value.name ||
-        this._category.color !== this.categoryForm.value.color
+        this.category.name !== this.categoryForm.value.name ||
+        this.category.color !== this.categoryForm.value.color
       ) {
-        this._category.name = this.categoryForm.value.name!;
-        this._category.color = this.categoryForm.value.color!;
-        this.kanbanService.updateCategory();
+        this.category.name = this.categoryForm.value.name!;
+        this.category.color = this.categoryForm.value.color!;
+        this.kanbanService.updateCategory(this.category);
       }
     } else {
-      this.kanbanService.activeCategory = {
+      this.category = {
         id: -1,
         name: this.categoryForm.value.name!,
         color: this.categoryForm.value.color!,
         tasks: [],
+        position: -1,
       };
-      this.kanbanService.addCategory();
+      this.kanbanService.addCategory(this.category);
     }
-    this.kanbanService.setModalVisibility(ModalType.Disabled);
+    this.kanbanService.setModalType(ModalType.Disabled);
   }
 }

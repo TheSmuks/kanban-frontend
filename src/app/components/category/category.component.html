@@ -80,7 +80,7 @@
         [properties]="task"
         [color]="properties.color"
         (onDelete)="handleTaskDeletion($event)"
-        (onTaskEdit)="editTask($event)"
+        (onTaskEdit)="emitTaskEdit($event)"
       ></app-task>
       }
     </div>

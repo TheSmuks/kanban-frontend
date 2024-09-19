@@ -18,6 +18,6 @@ export class ModalComponent {
   @Input() name: string = "";
   constructor(private kanbanService: KanbanService) {}
   hideModal(){
-    this.kanbanService.setModalVisibility(ModalType.Disabled);
+    this.kanbanService.setModalType(ModalType.Disabled);
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Category as Category } from '../../interfaces/category';
 import { TaskComponent } from '../task/task.component';
 import { KanbanService } from '../../services/kanban.service';
@@ -25,7 +25,11 @@ export class CategoryComponent {
     name: '',
     color: '',
     tasks: [],
+    position: -1,
   };
+  @Output() onTaskEdit: EventEmitter<Task> = new EventEmitter<Task>();
+  @Output() onCategoryEdit: EventEmitter<Category> =
+    new EventEmitter<Category>();
   isContextMenuVisible: boolean = false;
 
   constructor(private kanbanService: KanbanService) {
@@ -35,38 +39,51 @@ export class CategoryComponent {
   }
 
   addTask() {
-    this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.setModalVisibility(ModalType.Task);
+    this.onTaskEdit.emit({
+      id: -1,
+      name: '',
+      description: '',
+      categoryId: this.properties.id,
+      position: -1,
+    });
+    this.kanbanService.setModalType(ModalType.Task);
   }
 
-  editTask(task: Task) {
-    this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.activeTask = task;
-    this.kanbanService.setModalVisibility(ModalType.Task);
+  emitTaskEdit(task: Task) {
+    this.onTaskEdit.emit(task);
+    this.kanbanService.setModalType(ModalType.Task);
   }
 
   drop(event: CdkDragDrop<Category>) {
     if (event.previousContainer === event.container) {
+      if (event.previousIndex === event.currentIndex) return;
+      const sourceTask = this.properties.tasks[event.currentIndex];
+      const destinationTask = this.properties.tasks[event.previousIndex];
+      sourceTask.position = event.previousIndex;
+      destinationTask.position = event.currentIndex;
       moveItemInArray(
         this.properties.tasks,
         event.previousIndex,
         event.currentIndex
       );
-      // TODO: send update task with updated priority
+      this.kanbanService.updateTask(sourceTask);
+      this.kanbanService.updateTask(destinationTask);
     } else {
+      event.previousContainer.data.tasks[event.previousIndex].categoryId =
+        event.container.data.id;
       transferArrayItem(
         event.previousContainer.data.tasks,
         event.container.data.tasks,
         event.previousIndex,
         event.currentIndex
       );
-      // TODO: send update task with updated categoryId
+      this.kanbanService.updateTask(
+        event.container.data.tasks[event.currentIndex]
+      );
     }
   }
   handleTaskDeletion(task: Task) {
-    this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.activeTask = task;
-    this.kanbanService.removeTask();
+    this.kanbanService.removeTask(task.id);
   }
 
   updateContextMenuVisbility(val: boolean) {
@@ -75,27 +92,24 @@ export class CategoryComponent {
   }
 
   handleCategoryEdit() {
-    this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.setModalVisibility(ModalType.Category);
+    this.onCategoryEdit.emit(this.properties);
+    this.kanbanService.setModalType(ModalType.Category);
     this.updateContextMenuVisbility(false);
   }
 
   handleCategoryDeletion() {
-    this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.removeCategory();
+    this.kanbanService.removeCategory(this.properties.id);
     this.updateContextMenuVisbility(false);
   }
 
   handleCategoryClear() {
     this.properties.tasks = [];
-    this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.updateCategory();
+    this.kanbanService.updateCategory(this.properties);
     this.updateContextMenuVisbility(false);
   }
 
   moveCategory(left: boolean) {
-    this.kanbanService.activeCategory = this.properties;
-    this.kanbanService.moveCategory(left);
+    this.kanbanService.moveCategory(this.properties.id, left);
     this.updateContextMenuVisbility(false);
   }
 }

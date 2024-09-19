@@ -22,36 +22,44 @@ export class TaskModalComponent {
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
   });
-  _task: Task | undefined;
-
-  constructor(private kanbanService: KanbanService) {
-    this._task = this.kanbanService.activeTask;
-    if (this._task) {
+  @Input() task: Task = {
+    id: -1,
+    name: '',
+    description: '',
+    categoryId: -1,
+    position: -1,
+  };
+  private receivedInput: boolean = false;
+  constructor(private kanbanService: KanbanService) {}
+  ngOnChanges() {
+    if (!this.receivedInput && this.task.id !== -1) {
+      this.receivedInput = true;
       this.taskForm.setValue({
-        name: this._task.name,
-        description: this._task.description,
+        name: this.task.name,
+        description: this.task.description,
       });
     }
   }
   handleSubmit() {
-    if (this._task) {
+    if (this.task.id !== -1) {
       if (
-        this._task.name !== this.taskForm.value.name ||
-        this._task.description !== this.taskForm.value.description
+        this.task.name !== this.taskForm.value.name ||
+        this.task.description !== this.taskForm.value.description
       ) {
-        this._task.name = this.taskForm.value.name!;
-        this._task.description = this.taskForm.value.description!;
-        this.kanbanService.editTask();
+        this.task.name = this.taskForm.value.name!;
+        this.task.description = this.taskForm.value.description!;
+        this.kanbanService.updateTask(this.task);
       }
     } else {
-      this.kanbanService.activeTask = {
+      this.task = {
         id: -1,
         name: this.taskForm.value.name!,
         description: this.taskForm.value.description!,
-        categoryId: -1,
+        categoryId: this.task.categoryId,
+        position: -1,
       };
-      this.kanbanService.addTask();
+      this.kanbanService.addTask(this.task);
     }
-    this.kanbanService.setModalVisibility(ModalType.Disabled);
+    this.kanbanService.setModalType(ModalType.Disabled);
   }
 }

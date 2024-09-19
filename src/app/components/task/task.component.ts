@@ -12,7 +12,13 @@ import { ModalType } from '../../enums/modal-type';
   styleUrl: './task.component.css',
 })
 export class TaskComponent {
-  @Input() properties: Task = { id: -1, name: '', description: '', categoryId: -1 };
+  @Input() properties: Task = {
+    id: -1,
+    name: '',
+    description: '',
+    categoryId: -1,
+    position: -1,
+  };
   @Input() color: string = '';
   @Output() onDelete: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() onTaskEdit: EventEmitter<Task> = new EventEmitter<Task>();
@@ -24,6 +30,5 @@ export class TaskComponent {
 
   emitEdit() {
     this.onTaskEdit.emit(this.properties);
-    this.kanbanService.setModalVisibility(ModalType.Task);
   }
 }
