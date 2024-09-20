@@ -68,7 +68,7 @@ export class MockApiService implements InMemoryDbService {
   }
   delete(reqInfo: RequestInfo) {
     const collectionName = reqInfo.collectionName || reqInfo.url.split('/')[1];
-    const id = Number(reqInfo.url.split('/')[-1]);
+    const id = Number(reqInfo.url.split('/').at(-1));
     const collection = reqInfo.collection;
     if (collectionName === 'tasks') {
       const taskIndex = collection.findIndex((task: Task) => task.id === id);
