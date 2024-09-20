@@ -1,4 +1,4 @@
-<app-modal name="Add Category">
+<app-modal name="Add Category" (onClose)="onClose.emit(true)">
   <form
     [formGroup]="categoryForm"
     (ngSubmit)="handleSubmit()"
@@ -21,8 +21,10 @@
       />
     </label>
     <button
-      class="p-2 border-2 rounded-md mb-2 text-white bg-blue-500 hover:bg-blue-600 hover:cursor-pointer"
+      class="p-2 border-2 rounded-md mb-2 text-white bg-blue-500 hover:bg-blue-600"
       type="submit"
+      [class.cursor-pointer]="categoryForm.valid"
+      [class.cursor-not-allowed]="!categoryForm.valid"
       [disabled]="!categoryForm.valid"
     >
       @if(this.category.id !== -1){ Edit }@else{ Add }

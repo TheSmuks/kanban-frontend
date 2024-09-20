@@ -9,9 +9,9 @@
 </div>
 @switch (activeModal) {
   @case (ModalType.Task) {
-    <app-task-modal [task]="editedTask"></app-task-modal>
+    <app-task-modal [task]="editedTask" (onClose)="resetValues()"></app-task-modal>
   }
   @case (ModalType.Category) {
-    <app-category-modal [category]="editedCategory"></app-category-modal>
+    <app-category-modal [category]="editedCategory" (onClose)="resetValues()"></app-category-modal>
   }
 }

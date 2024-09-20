@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { KanbanService } from '../../services/kanban.service';
 import { ModalType } from '../../enums/modal-type';
 
@@ -15,9 +15,11 @@ import { ModalType } from '../../enums/modal-type';
   },
 })
 export class ModalComponent {
-  @Input() name: string = "";
+  @Input() name: string = '';
+  @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(private kanbanService: KanbanService) {}
-  hideModal(){
+  hideModal() {
+    this.onClose.emit(true);
     this.kanbanService.setModalType(ModalType.Disabled);
   }
 }

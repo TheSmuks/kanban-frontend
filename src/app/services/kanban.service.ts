@@ -33,7 +33,6 @@ export class KanbanService {
     this.http
       .get<Category[]>(`${this.apiEndPoint}/categories`)
       .subscribe((categories) => {
-        console.log(categories);
         this._categories.next(categories);
       });
   }

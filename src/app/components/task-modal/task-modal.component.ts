@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import {
   FormControl,
@@ -9,6 +9,7 @@ import {
 import { KanbanService } from '../../services/kanban.service';
 import { ModalType } from '../../enums/modal-type';
 import { Task } from '../../interfaces/task';
+import { emptyTask } from '../../../utils/mock';
 
 @Component({
   selector: 'app-task-modal',
@@ -22,17 +23,13 @@ export class TaskModalComponent {
     name: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
   });
-  @Input() task: Task = {
-    id: -1,
-    name: '',
-    description: '',
-    categoryId: -1,
-    position: -1,
-  };
+  @Input() task: Task = emptyTask();
+  @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
   private receivedInput: boolean = false;
   constructor(private kanbanService: KanbanService) {}
   ngOnChanges() {
     if (!this.receivedInput && this.task.id !== -1) {
+      console.log(this.task);
       this.receivedInput = true;
       this.taskForm.setValue({
         name: this.task.name,
@@ -60,6 +57,7 @@ export class TaskModalComponent {
       };
       this.kanbanService.addTask(this.task);
     }
+    this.onClose.emit(true);
     this.kanbanService.setModalType(ModalType.Disabled);
   }
 }

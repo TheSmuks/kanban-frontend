@@ -9,6 +9,10 @@ import { CategoryModalComponent } from './components/category-modal/category-mod
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ModalType } from './enums/modal-type';
 import { Task } from './interfaces/task';
+import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
+import { MockApiService } from './services/mock-api.service';
+import { environment } from '../environment/environment';
+import { emptyCategory, emptyTask } from '../utils/mock';
 
 @Component({
   selector: 'app-root',
@@ -31,20 +35,8 @@ export class AppComponent {
   isTaskModal: boolean = false;
   isContextMenuActive: boolean = false;
   ModalType = ModalType;
-  editedTask: Task = {
-    id: -1,
-    name: '',
-    description: '',
-    categoryId: -1,
-    position: -1,
-  };
-  editedCategory: Category = {
-    id: -1,
-    name: '',
-    color: '',
-    tasks: [],
-    position: -1,
-  };
+  editedTask: Task = emptyTask();
+  editedCategory: Category = emptyCategory();
   constructor(private kanbanService: KanbanService) {
     kanbanService.activeModal.subscribe((val) => (this.activeModal = val));
     kanbanService.categories.subscribe((val) => (this.categories = val));
@@ -65,5 +57,9 @@ export class AppComponent {
   }
   addCategory() {
     this.kanbanService.setModalType(ModalType.Category);
+  }
+  resetValues() {
+    this.editedTask = emptyTask();
+    this.editedCategory = emptyCategory();
   }
 }

@@ -1,4 +1,4 @@
-<app-modal name="Add task">
+<app-modal name="Add task" (onClose)="onClose.emit(true)">
   <form
     [formGroup]="taskForm"
     (ngSubmit)="handleSubmit()"
@@ -21,8 +21,10 @@
       />
     </label>
     <button
-      class="p-2 border-2 rounded-md mb-2 text-white bg-blue-500 hover:bg-blue-600 hover:cursor-pointer"
+      class="p-2 border-2 rounded-md mb-2 text-white bg-blue-500 hover:bg-blue-600"
       type="submit"
+      [class.cursor-pointer]="taskForm.valid"
+      [class.cursor-not-allowed]="!taskForm.valid"
       [disabled]="!taskForm.valid"
     >
       @if(this.task.id !== -1){ Edit }@else{ Add }

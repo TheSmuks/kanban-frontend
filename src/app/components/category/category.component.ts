@@ -11,6 +11,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Task } from '../../interfaces/task';
 import { ModalType } from '../../enums/modal-type';
+import { emptyCategory } from '../../../utils/mock';
 
 @Component({
   selector: 'app-task-category',
@@ -20,13 +21,7 @@ import { ModalType } from '../../enums/modal-type';
   styleUrl: './category.component.css',
 })
 export class CategoryComponent {
-  @Input() properties: Category = {
-    id: -1,
-    name: '',
-    color: '',
-    tasks: [],
-    position: -1,
-  };
+  @Input() properties: Category = emptyCategory();
   @Output() onTaskEdit: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() onCategoryEdit: EventEmitter<Category> =
     new EventEmitter<Category>();
@@ -77,9 +72,10 @@ export class CategoryComponent {
         event.previousIndex,
         event.currentIndex
       );
-      this.kanbanService.updateTask(
-        event.container.data.tasks[event.currentIndex]
-      );
+      event.container.data.tasks.forEach((task, index) => {
+        task.position = index;
+        this.kanbanService.updateTask(task);
+      });
     }
   }
   handleTaskDeletion(task: Task) {

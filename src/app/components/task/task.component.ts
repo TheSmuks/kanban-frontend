@@ -3,6 +3,7 @@ import { Task } from '../../interfaces/task';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { KanbanService } from '../../services/kanban.service';
 import { ModalType } from '../../enums/modal-type';
+import { emptyTask } from '../../../utils/mock';
 
 @Component({
   selector: 'app-task',
@@ -12,13 +13,7 @@ import { ModalType } from '../../enums/modal-type';
   styleUrl: './task.component.css',
 })
 export class TaskComponent {
-  @Input() properties: Task = {
-    id: -1,
-    name: '',
-    description: '',
-    categoryId: -1,
-    position: -1,
-  };
+  @Input() properties: Task = emptyTask();
   @Input() color: string = '';
   @Output() onDelete: EventEmitter<Task> = new EventEmitter<Task>();
   @Output() onTaskEdit: EventEmitter<Task> = new EventEmitter<Task>();

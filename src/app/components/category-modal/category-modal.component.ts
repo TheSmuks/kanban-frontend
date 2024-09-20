@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import {
   FormControl,
@@ -9,6 +9,7 @@ import {
 import { KanbanService } from '../../services/kanban.service';
 import { ModalType } from '../../enums/modal-type';
 import { Category } from '../../interfaces/category';
+import { emptyCategory } from '../../../utils/mock';
 
 @Component({
   selector: 'app-category-modal',
@@ -20,15 +21,10 @@ import { Category } from '../../interfaces/category';
 export class CategoryModalComponent {
   categoryForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    color: new FormControl('', Validators.required),
+    color: new FormControl(''),
   });
-  @Input() category: Category = {
-    id: -1,
-    name: '',
-    color: '',
-    tasks: [],
-    position: -1,
-  };
+  @Input() category: Category = emptyCategory();
+  @Output() onClose: EventEmitter<boolean> = new EventEmitter<boolean>();
   private receivedInput: boolean = false;
   constructor(private kanbanService: KanbanService) {}
   ngOnChanges() {
@@ -60,6 +56,7 @@ export class CategoryModalComponent {
       };
       this.kanbanService.addCategory(this.category);
     }
+    this.onClose.emit(true);
     this.kanbanService.setModalType(ModalType.Disabled);
   }
 }
